@@ -1,0 +1,88 @@
+version: '2'
+
+services:
+
+ auth_srv_ame:
+    image: py_test_base
+    ports:
+      - "5089:5089"
+    container_name: auth_ame
+    volumes:
+      - ./blaxis:/tmp/blaxis
+    environment:
+      LC_ALL: C.UTF-8
+    entrypoint:
+      - python
+      - /tmp/blaxis/authorserver/authorserver.py
+      - -l 0.0.0.0
+      - -p
+      - '5089'
+#      - -c 1 
+      - -d 1 
+      - -Z 
+      - amex_capn
+      - -V
+
+ auth_srv_cls:
+    image: py_test_base
+    ports:
+      - "48912:48912"
+    container_name: auth_cls
+    volumes:
+      - ./blaxis:/tmp/blaxis
+    entrypoint: 
+      - python
+      - /tmp/blaxis/authorserver/authorserver.py
+      - -l 0.0.0.0 
+      - -p 
+      - '48912'
+      - -s 2
+      - -Z 
+      - iso8583bpa 
+      - -V
+
+ auth_srv_dci:
+    image: py_test_base
+    ports:
+      - "2046:2046"
+    container_name: auth_dci
+    volumes:
+      - ./blaxis:/tmp/blaxis
+    entrypoint: 
+      - python
+      - /tmp/blaxis/authorserver/authorserver.py
+      - -l 0.0.0.0
+      - -p
+      - '2046'
+      - -s 2
+      - -c 0
+      - -Z
+      - iso8583dci
+      - -V
+
+ auth_srv_mnx:
+    image: py_test_base
+    ports:
+      - "1216:1216"
+    container_name: auth_mnx
+    volumes:
+      - ./blaxis:/tmp/blaxis
+    environment:
+      LC_ALL: C.UTF-8
+    entrypoint:
+      - python
+      - /tmp/blaxis/authorserver/authorserver.py
+      - -l 0.0.0.0
+      - -p
+      - '1216'
+      - -s 4
+      - -c 1
+      - -Z
+      - iso8583mnx
+      - -V
+
+networks:
+    default:
+        external:
+            name: dev-bridge-network
+
